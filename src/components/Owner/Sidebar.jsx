@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { assets, dummyCarData, ownerMenuLinks } from "../../assets/assets";
+import { assets, dummyUserData, ownerMenuLinks } from "../../assets/assets";
 import { NavLink, useLocation } from "react-router-dom";
 
 const Sidebar = () => {
   const location = useLocation();
-  const user = dummyCarData;
+  const user = dummyUserData;
 
   // Profile image state
   const [selectedImage, setSelectedImage] = useState(null);
