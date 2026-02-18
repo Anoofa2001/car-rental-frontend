@@ -9,6 +9,7 @@ import Layout from "./pages/Owner/Layout";
 import AddCar from "./pages/Owner/AddCar";
 import ManageCars from "./pages/Owner/ManageCars";
 import ManageBookings from "./pages/Owner/ManageBookings";
+import Dashboard from "./pages/Owner/Dashboard";
 
 const App = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -23,12 +24,12 @@ const App = () => {
         <Route path="/cars-details/:id" element={<CarDetails />} />
         <Route path="/cars" element={<Cars />} />
         <Route path="/my-bookings" element={<MyBookings />} />
-        <Routes path="/owner/*" element={<Layout />}>
+        <Route path="/owner" element={<Layout />}>
           <Route index element={<Dashboard />} />
           <Route path="add-car" element={<AddCar />} />
           <Route path="manage-cars" element={<ManageCars />} />
           <Route path="manage-bookings" element={<ManageBookings />} />
-        </Routes>
+        </Route>
       </Routes>
     </>
   );
