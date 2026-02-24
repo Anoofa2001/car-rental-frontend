@@ -10,6 +10,7 @@ import AddCar from "./pages/Owner/AddCar";
 import ManageCars from "./pages/Owner/ManageCars";
 import ManageBookings from "./pages/Owner/ManageBookings";
 import Dashboard from "./pages/Owner/Dashboard";
+import Login from "./components/Login";
 
 const App = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -17,6 +18,8 @@ const App = () => {
 
   return (
     <>
+      {showLogin && <Login setShowLogin={setShowLogin} />}
+     
       {!isOwnerPath && <Navbar setShowLogin={setShowLogin} />}
 
       <Routes>
