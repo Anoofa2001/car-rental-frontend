@@ -14,11 +14,12 @@ const AddCar = () => {
     fuel_type: "",
     transmission: "",
     category: "",
+    location: "",
     description: "",
   });
 
   const currentYear = new Date().getFullYear();
-  const currency = "₹"; // Change to "$" if needed
+  const currency = "AED";
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
@@ -30,7 +31,7 @@ const AddCar = () => {
       <div className="max-w-4xl">
         <Title
           title="Add New Car"
-          subTitle="Fill in the details of your car to add it to the platform and start earning!"
+          subTitle="Fill in the details of your car to list it on the UAE rental platform."
         />
 
         <form
@@ -142,7 +143,7 @@ const AddCar = () => {
                     setCar({ ...car, pricePerDay: e.target.value })
                   }
                   placeholder="100"
-                  className="w-full border border-gray-300 rounded-xl pl-10 pr-4 py-3 focus:ring-2 focus:ring-primary outline-none transition"
+                  className="w-full border border-gray-300 rounded-xl pl-12 pr-4 py-3 focus:ring-2 focus:ring-primary outline-none transition"
                   required
                 />
               </div>
@@ -151,7 +152,6 @@ const AddCar = () => {
 
           {/* Category, Fuel Type, Transmission */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Category */}
             <div>
               <label className="block text-gray-700 mb-2 font-medium">
                 Category
@@ -173,7 +173,6 @@ const AddCar = () => {
               </select>
             </div>
 
-            {/* Fuel Type */}
             <div>
               <label className="block text-gray-700 mb-2 font-medium">
                 Fuel Type
@@ -194,7 +193,6 @@ const AddCar = () => {
               </select>
             </div>
 
-            {/* Transmission */}
             <div>
               <label className="block text-gray-700 mb-2 font-medium">
                 Transmission
@@ -214,23 +212,48 @@ const AddCar = () => {
             </div>
           </div>
 
-          {/* Seating Capacity */}
-          <div>
-            <label className="block text-gray-700 mb-2 font-medium">
-              Seating Capacity
-            </label>
-            <input
-              type="number"
-              min="1"
-              max="12"
-              value={car.seating_capacity}
-              onChange={(e) =>
-                setCar({ ...car, seating_capacity: e.target.value })
-              }
-              placeholder="e.g. 5"
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary outline-none transition"
-              required
-            />
+          {/* Seating Capacity & UAE Location */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-gray-700 mb-2 font-medium">
+                Seating Capacity
+              </label>
+              <input
+                type="number"
+                min="1"
+                max="12"
+                value={car.seating_capacity}
+                onChange={(e) =>
+                  setCar({ ...car, seating_capacity: e.target.value })
+                }
+                placeholder="e.g. 5"
+                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary outline-none transition"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-gray-700 mb-2 font-medium">
+                Location (UAE)
+              </label>
+              <select
+                value={car.location}
+                onChange={(e) =>
+                  setCar({ ...car, location: e.target.value })
+                }
+                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary outline-none transition bg-white"
+                required
+              >
+                <option value="">Select Location</option>
+                <option value="Dubai">Dubai</option>
+                <option value="Abu Dhabi">Abu Dhabi</option>
+                <option value="Sharjah">Sharjah</option>
+                <option value="Ajman">Ajman</option>
+                <option value="Ras Al Khaimah">Ras Al Khaimah</option>
+                <option value="Fujairah">Fujairah</option>
+                <option value="Umm Al Quwain">Umm Al Quwain</option>
+              </select>
+            </div>
           </div>
 
           {/* Description */}

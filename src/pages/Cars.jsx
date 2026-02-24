@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Title from "../components/Title";
 import { assets, dummyCarData } from "../assets/assets";
 import CarCard from "../components/CarCard";
+import Footer from "../components/Footer";
 
 const Cars = () => {
 
@@ -38,6 +39,7 @@ const Cars = () => {
           ))}
          </div>
       </div>
+      <Footer />
     </div>
   );
 };

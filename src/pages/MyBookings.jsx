@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { assets, dummyMyBookingsData } from "../assets/assets";
 import Title from "../components/Title";
+import Footer from "../components/Footer";
 
 const MyBookings = () => {
   const [bookings, setBookings] = useState([]);
@@ -15,6 +16,7 @@ const MyBookings = () => {
   }, []);
 
   return (
+    <>
     <div className="px-6 md:px-16 lg:px-24 xl:px-32 2xl:px-48 mt-16 text-sm max-w-7xl">
       <Title
         title="My Bookings"
@@ -98,6 +100,8 @@ const MyBookings = () => {
         ))}
       </div>
     </div>
+      <Footer />
+    </>
   );
 };
 
