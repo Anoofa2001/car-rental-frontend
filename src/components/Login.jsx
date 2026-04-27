@@ -1,6 +1,12 @@
 import React, { useState } from "react";
+import { useAppContext } from "../context/AppContext.jsx";
+import { Navigate } from "react-router-dom";
 
-const Login = ({ setShowLogin }) => {
+const Login = () => {
+
+  const { showLogin, setShowLogin, axios, setToken, navigate } = useAppContext();
+
+
   const [state, setState] = useState("login");
 
   const [formData, setFormData] =useState({
@@ -15,20 +21,42 @@ const Login = ({ setShowLogin }) => {
   };
 
   const onSubmitHandler = async (e) => {
-    e.preventDefault();
-    console.log(formData);
+    try {
+      e.preventDefault();
+      const { name, email, password } = formData;
+      const { data } = await axios.post(`/api/user/${state}`, { name, email, password });
+
+      if (data.success) {
+        navigate("/");
+        setToken(data.token);
+        localStorage.setItem("token", data.token);
+        setShowLogin(false);
+      } else {
+        toast.error(data.message);
+      }
+
+    } catch (error) {
+      console.error("Login error:", error);
+    }
   };
 
   return (
     <div
-      onClick={() => setShowLogin(false)}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4"
     >
       <form
         onSubmit={onSubmitHandler}
-        onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-md bg-white rounded-2xl shadow-2xl px-8 py-10"
+        className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl px-8 py-10"
       >
+        {/* Close button */}
+        <button
+          type="button"
+          onClick={() => setShowLogin(false)}
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-2xl font-bold focus:outline-none"
+          aria-label="Close login modal"
+        >
+          &times;
+        </button>
         {/* Title */}
         <h1 className="text-gray-800 text-3xl font-semibold text-center">
           {state === "login" ? "Login" : "Sign Up"}

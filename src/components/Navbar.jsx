@@ -1,11 +1,30 @@
 import React, { useState } from "react";
 import { assets, menuLinks } from "../assets/assets";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAppContext } from "../context/AppContext.jsx";
 
-const Navbar = ({ setShowLogin }) => {
+const Navbar = () => {
+  const { setShowLogin, user, logout, isOwner, axios, setIsOwner } = useAppContext();
+
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+
+  const changeRole = async () => {
+    try {
+      const { data } = await axios.post("/api/owner/change-role");
+      if (data.success) {
+        setIsOwner(true)
+        toast.success("Role changed to owner. Redirecting to dashboard...");
+      } else {
+        toast.error("Failed to change role. Please try again.");
+      }
+    }
+      catch (error) {
+        console.error("Error changing role:", error);
+        toast.error("Failed to change role. Please try again.");
+      } 
+  };
 
   return (
     <div
@@ -33,22 +52,25 @@ const Navbar = ({ setShowLogin }) => {
         </div>
 
         <div className="flex max-sm:flex-col items-start sm:items-center gap-6">
-          <button onClick={() => navigate("/owner")} className="cursor-pointer">
-            Dashboard
+          <button onClick={() => isOwner ? navigate("/owner") : changeRole()} className="cursor-pointer">
+            {isOwner ? 'Dashboard' : 'List Your Cars'}
           </button>
           <button
-            onClick={() => setShowLogin(true)}
+            onClick={() => {user ? logout() : setShowLogin(true)}}
             className="cursor-pointer px-8 py-2 bg-primary hover:bg-primary-dull transition-all text-white rounded-lg"
           >
-            Login
+           {user ? 'Logout' : 'Login'}
           </button>
         </div>
       </div>
 
-        <button className="sm:hidden cursor-pointer" aria-label="Menu" onClick={() => setOpen(!open)}>
-          <img src={open ? assets.close_icon : assets.menu_icon} alt="menu" />
-        </button>
-
+      <button
+        className="sm:hidden cursor-pointer"
+        aria-label="Menu"
+        onClick={() => setOpen(!open)}
+      >
+        <img src={open ? assets.close_icon : assets.menu_icon} alt="menu" />
+      </button>
     </div>
   );
 };

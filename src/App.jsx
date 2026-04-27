@@ -11,16 +11,19 @@ import ManageCars from "./pages/Owner/ManageCars";
 import ManageBookings from "./pages/Owner/ManageBookings";
 import Dashboard from "./pages/Owner/Dashboard";
 import Login from "./components/Login";
+import { Toaster} from "react-hot-toast";
+import { useAppContext } from "./context/AppContext.jsx";
 
 const App = () => {
-  const [showLogin, setShowLogin] = useState(false);
+  const {showLogin} = useAppContext();
   const isOwnerPath = useLocation().pathname.startsWith("/owner");
 
   return (
     <>
-      {showLogin && <Login setShowLogin={setShowLogin} />}
+    <Toaster/>
+      {showLogin && <Login />}
      
-      {!isOwnerPath && <Navbar setShowLogin={setShowLogin} />}
+      {!isOwnerPath && <Navbar />}
 
       <Routes>
         <Route path="/" element={<Home />} />
@@ -32,6 +35,7 @@ const App = () => {
           <Route path="add-car" element={<AddCar />} />
           <Route path="manage-cars" element={<ManageCars />} />
           <Route path="manage-bookings" element={<ManageBookings />} />
+          
         </Route>
       </Routes>
     </>
