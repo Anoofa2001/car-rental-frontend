@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import Title from "../../components/Owner/Title";
 import { assets } from "../../assets/assets";
+import { useAppContext } from "../../context/AppContext";
 
 const AddCar = () => {
+
+  const{ axios, currency } = useAppContext();
+
+
   const [image, setImage] = useState(null);
 
   const [car, setCar] = useState({
@@ -19,11 +24,45 @@ const AddCar = () => {
   });
 
   const currentYear = new Date().getFullYear();
-  const currency = "AED";
+
+  const [isLoading, setIsLoading] = useState(false);
+ 
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-    console.log(car);
+    if(isLoading) return null;
+
+    setIsLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("image", image);
+      formData.append('carData', JSON.stringify(car));
+
+      const { data } = await axios.post("/api/owner/add-car", formData);
+
+      if (data.success) {
+        toast.success(data.message);
+        setImage(null);
+        setCar({
+          brand: "",
+          model: "",
+          year: "",
+          pricePerDay: "",
+          seating_capacity: "",
+          fuel_type: "",
+          transmission: "",
+          category: "",
+          location: "",
+          description: "",
+        });
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error("Failed to add car. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -278,7 +317,7 @@ const AddCar = () => {
               type="submit"
               className="bg-primary text-white px-8 py-3 rounded-xl hover:opacity-90 transition font-semibold shadow-md"
             >
-              Add Car
+              {isLoading ? "Loading...":'Add Car'}
             </button>
           </div>
         </form>

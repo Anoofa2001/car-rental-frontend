@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { assets, dummyUserData, ownerMenuLinks } from "../../assets/assets";
+import { assets, ownerMenuLinks } from "../../assets/assets";
 import { NavLink, useLocation } from "react-router-dom";
+import { useAppContext } from "../../context/AppContext";
 
 const Sidebar = () => {
   const location = useLocation();
-  const user = dummyUserData;
+  const {user, axios, fetchUser} = useAppContext();
 
   // Profile image state
   const [selectedImage, setSelectedImage] = useState(null);
@@ -12,12 +13,29 @@ const Sidebar = () => {
     user?.image || "https://images.unsplash.com/photo-1503376780353-7e6692767b70"
   );
 
+  // Update profileImage whenever user.image changes
+  React.useEffect(() => {
+    setProfileImage(user?.image || "https://images.unsplash.com/photo-1503376780353-7e6692767b70");
+  }, [user]);
+
   // Save image
-  const updateImage = () => {
-    if (selectedImage) {
-      const imageUrl = URL.createObjectURL(selectedImage);
-      setProfileImage(imageUrl);
-      setSelectedImage(null);
+  const updateImage = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("image", selectedImage);
+
+      const { data } = await axios.post("/api/owner/update-image", formData);
+
+      if (data.success) {
+        setProfileImage(data.image); // Update the profile image with the new URL
+        setSelectedImage(null);
+        await fetchUser();
+        toast.success("Profile image updated successfully");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error("Failed to upload image. Please try again.");
     }
   };
 

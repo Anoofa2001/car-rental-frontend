@@ -13,6 +13,8 @@ import Dashboard from "./pages/Owner/Dashboard";
 import Login from "./components/Login";
 import { Toaster} from "react-hot-toast";
 import { useAppContext } from "./context/AppContext.jsx";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 const App = () => {
   const {showLogin} = useAppContext();
