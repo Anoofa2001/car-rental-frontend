@@ -5,12 +5,15 @@ import { BrowserRouter } from 'react-router-dom'
 import { AppProvider } from './context/AppContext.jsx';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
+import {MotionConfig} from 'motion/react';
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <AppProvider>
       <ToastContainer />
+      <MotionConfig viewport={{ once: true }}>
       <App />
+      </MotionConfig>
     </AppProvider>
   </BrowserRouter>,
 )

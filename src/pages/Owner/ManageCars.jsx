@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { assets } from "../../assets/assets";
 import Title from "../../components/Owner/Title";
 import { useAppContext } from "../../context/AppContext";
+import { motion } from "framer-motion";
 
 const ManageCars = () => {
 
-  const {isOwner, axios, currency} = useAppContext();
+  const { isOwner, axios, currency } = useAppContext();
 
   const [cars, setCars] = useState([]);
 
@@ -23,7 +24,7 @@ const ManageCars = () => {
     }
   };
 
-    const toggleAvailability = async (carId) => {
+  const toggleAvailability = async (carId) => {
     try {
       const { data } = await axios.post("/api/owner/toggle-cars", { carId });
 
@@ -40,10 +41,8 @@ const ManageCars = () => {
 
   const deleteCar = async (carId) => {
     try {
-
       const confirm = window.confirm("Are you sure you want to delete this car? This action cannot be undone.");
-
-      if(!confirm) return null;
+      if (!confirm) return null;
 
       const { data } = await axios.post("/api/owner/delete-car", { carId });
 
@@ -58,22 +57,36 @@ const ManageCars = () => {
     }
   };
 
-
-
-
   useEffect(() => {
     isOwner && fetchOwnerCars();
   }, [isOwner]);
 
   return (
-    <div className="px-4 pt-10 md:px-10 w-full bg-gray-50 min-h-screen">
-      <Title
-        title="Manage Cars"
-        subTitle="View, update and control availability of your listed cars."
-      />
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="px-4 pt-10 md:px-10 w-full bg-gray-50 min-h-screen"
+    >
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+      >
+        <Title
+          title="Manage Cars"
+          subTitle="View, update and control availability of your listed cars."
+        />
+      </motion.div>
 
-      <div className="max-w-6xl w-full bg-white rounded-2xl shadow-lg mt-8 overflow-hidden border border-gray-200">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.98 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.3 }}
+        className="max-w-6xl w-full bg-white rounded-2xl shadow-lg mt-8 overflow-hidden border border-gray-200"
+      >
         <table className="w-full text-sm text-gray-600">
+
           <thead className="bg-gray-100 text-gray-500 uppercase text-xs tracking-wider">
             <tr>
               <th className="p-5 text-left font-semibold">Car Details</th>
@@ -87,15 +100,18 @@ const ManageCars = () => {
 
           <tbody>
             {cars.map((car, index) => (
-              <tr
+              <motion.tr
                 key={index}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25, delay: index * 0.05 }}
+                whileHover={{ scale: 1.01 }}
                 className="border-t border-gray-200 hover:bg-gray-50 transition duration-200"
               >
-                {/* Car Info */}
                 <td className="p-5 flex items-center gap-4">
-                  <img
+                  <motion.img
+                    whileHover={{ scale: 1.05 }}
                     src={car.image}
-                    alt={car.name}
                     className="w-16 h-16 object-cover rounded-xl shadow-sm"
                   />
                   <div>
@@ -108,23 +124,19 @@ const ManageCars = () => {
                   </div>
                 </td>
 
-                {/* Category */}
                 <td className="p-5 max-md:hidden font-medium">
                   {car.category}
                 </td>
 
-                {/* Location */}
                 <td className="p-5 max-md:hidden">
                   {car.location || "UAE"}
                 </td>
 
-                {/* Price */}
                 <td className="p-5 font-semibold text-primary text-base">
                   {currency} {car.pricePerDay}
                   <span className="text-xs text-gray-500"> /day</span>
                 </td>
 
-                {/* Status */}
                 <td className="p-5 max-md:hidden">
                   <span
                     className={`px-4 py-1.5 rounded-full text-xs font-medium ${
@@ -137,57 +149,55 @@ const ManageCars = () => {
                   </span>
                 </td>
 
-                {/* Actions */}
                 <td className="p-5">
                   <div className="flex justify-center gap-4">
-
-                    {/* Toggle Button */}
-                    <button
-                      className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium shadow-sm transition 
-                      ${
-                        car.isAvailable
-                          ? "bg-yellow-100 text-yellow-700 hover:bg-yellow-200"
-                          : "bg-green-100 text-green-700 hover:bg-green-200"
-                      }`}
+{/* 
+                    <motion.button
+                      whileTap={{ scale: 0.95 }}
+                      className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium shadow-sm transition`}
                     >
-                      <img onClick={()=> toggleAvailability(car._id)}
+                      <img
+                        onClick={() => toggleAvailability(car._id)}
                         src={
                           car.isAvailable
                             ? assets.eye_close_icon
                             : assets.eye_icon
                         }
-                        alt="Toggle"
                         className="w-5 h-5"
                       />
                       {car.isAvailable ? "Disable" : "Enable"}
-                    </button>
+                    </motion.button> */}
 
-                    {/* Delete Button */}
-                    <button
+                    <motion.button
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => deleteCar(car._id)}
                       className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium bg-red-100 text-red-600 hover:bg-red-200 shadow-sm transition"
                     >
-                      <img onClick={() => deleteCar(car._id)}
+                      <img
                         src={assets.delete_icon}
-                        alt="Delete"
                         className="w-5 h-5"
                       />
                       Delete
-                    </button>
+                    </motion.button>
 
                   </div>
                 </td>
-              </tr>
+              </motion.tr>
             ))}
           </tbody>
         </table>
 
         {cars.length === 0 && (
-          <div className="p-10 text-center text-gray-500">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="p-10 text-center text-gray-500"
+          >
             No cars listed yet.
-          </div>
+          </motion.div>
         )}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

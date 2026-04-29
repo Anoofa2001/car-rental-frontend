@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { useAppContext } from "../context/AppContext.jsx";
 import { Navigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const Login = () => {
 
   const { showLogin, setShowLogin, axios, setToken, navigate } = useAppContext();
 
-
   const [state, setState] = useState("login");
 
-  const [formData, setFormData] =useState({
+  const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
@@ -41,11 +41,17 @@ const Login = () => {
   };
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4"
     >
-      <form
+      <motion.form
         onSubmit={onSubmitHandler}
+        initial={{ scale: 0.9, y: 20, opacity: 0 }}
+        animate={{ scale: 1, y: 0, opacity: 1 }}
+        transition={{ duration: 0.3 }}
         className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl px-8 py-10"
       >
         {/* Close button */}
@@ -57,6 +63,7 @@ const Login = () => {
         >
           &times;
         </button>
+
         {/* Title */}
         <h1 className="text-gray-800 text-3xl font-semibold text-center">
           {state === "login" ? "Login" : "Sign Up"}
@@ -120,12 +127,14 @@ const Login = () => {
         )}
 
         {/* Submit Button */}
-        <button
+        <motion.button
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
           type="submit"
           className="mt-6 w-full h-12 rounded-full text-white bg-indigo-600 hover:bg-indigo-700 transition font-medium shadow-md"
         >
           {state === "login" ? "Login" : "Create Account"}
-        </button>
+        </motion.button>
 
         {/* Toggle */}
         <p
@@ -141,8 +150,8 @@ const Login = () => {
             Click here
           </span>
         </p>
-      </form>
-    </div>
+      </motion.form>
+    </motion.div>
   );
 };
 
