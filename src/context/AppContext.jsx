@@ -10,7 +10,8 @@ export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
     const navigate = useNavigate();
-    const currency = import.meta.env.VITE_CURRENCY 
+    // Set currency to Dirhams (AED)
+    const currency = 'AED ';
 
     const [token, setToken] = useState(null);
     const [user, setUser] = useState(null);

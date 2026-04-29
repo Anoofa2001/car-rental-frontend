@@ -1,18 +1,69 @@
 import React, { useEffect, useState } from "react";
-import { assets, dummyCarData } from "../../assets/assets";
+import { assets } from "../../assets/assets";
 import Title from "../../components/Owner/Title";
+import { useAppContext } from "../../context/AppContext";
 
 const ManageCars = () => {
-  const currency = import.meta.env.VITE_CURRENCY || "AED";
+
+  const {isOwner, axios, currency} = useAppContext();
+
   const [cars, setCars] = useState([]);
 
   const fetchOwnerCars = async () => {
-    setCars(dummyCarData);
+    try {
+      const { data } = await axios.get("/api/owner/cars");
+
+      if (data.success) {
+        setCars(data.cars);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error("Failed to fetch cars. Please try again.");
+    }
   };
 
+    const toggleAvailability = async (carId) => {
+    try {
+      const { data } = await axios.post("/api/owner/toggle-cars", { carId });
+
+      if (data.success) {
+        toast.success(data.message);
+        fetchOwnerCars();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error("Failed to fetch cars. Please try again.");
+    }
+  };
+
+  const deleteCar = async (carId) => {
+    try {
+
+      const confirm = window.confirm("Are you sure you want to delete this car? This action cannot be undone.");
+
+      if(!confirm) return null;
+
+      const { data } = await axios.post("/api/owner/delete-car", { carId });
+
+      if (data.success) {
+        toast.success(data.message);
+        fetchOwnerCars();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error("Failed to fetch cars. Please try again.");
+    }
+  };
+
+
+
+
   useEffect(() => {
-    fetchOwnerCars();
-  }, []);
+    isOwner && fetchOwnerCars();
+  }, [isOwner]);
 
   return (
     <div className="px-4 pt-10 md:px-10 w-full bg-gray-50 min-h-screen">
@@ -99,7 +150,7 @@ const ManageCars = () => {
                           : "bg-green-100 text-green-700 hover:bg-green-200"
                       }`}
                     >
-                      <img
+                      <img onClick={()=> toggleAvailability(car._id)}
                         src={
                           car.isAvailable
                             ? assets.eye_close_icon
@@ -115,7 +166,7 @@ const ManageCars = () => {
                     <button
                       className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium bg-red-100 text-red-600 hover:bg-red-200 shadow-sm transition"
                     >
-                      <img
+                      <img onClick={() => deleteCar(car._id)}
                         src={assets.delete_icon}
                         alt="Delete"
                         className="w-5 h-5"

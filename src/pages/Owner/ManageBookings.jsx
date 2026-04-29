@@ -1,14 +1,36 @@
 import React, { useEffect, useState } from "react";
-import { dummyMyBookingsData } from "../../assets/assets";
 import Title from "../../components/Owner/Title";
+import { useAppContext } from "../../context/AppContext";
 
 const ManageBookings = () => {
-  const currency = import.meta.env.VITE_CURRENCY || "AED";
+
+  const {axios, currency} = useAppContext();
+
   const [bookings, setBookings] = useState([]);
 
   const fetchOwnerBookings = async () => {
-    setBookings(dummyMyBookingsData);
+    try {
+      const { data } = await axios.get("/api/bookings/owner");
+      data.success ? setBookings(data.bookings) : toast.error(data.message);
+    } catch (error) {
+      toast.error("Failed to fetch bookings. Please try again.");
+    }
   };
+
+   const changeBookingStatus = async (bookingId, status) => {
+    try {
+      const { data } = await axios.post("/api/bookings/change-status", { bookingId, status });
+      if (data.success) {
+        toast.success(data.message);
+        fetchOwnerBookings();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error("Failed to fetch bookings. Please try again.");
+    }
+  };
+
 
   useEffect(() => {
     fetchOwnerBookings();
@@ -79,21 +101,19 @@ const ManageBookings = () => {
 
                 {/* Booking Status */}
                 <td className="p-5 text-center">
-                  {booking.status === "Completed" ? (
+                  {booking.status === "completed" ? (
                     <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600">
                       Completed
                     </span>
                   ) : (
                     <select
+                      onChange={(e) => changeBookingStatus(booking._id, e.target.value)}
                       value={booking.status}
-                      onChange={(e) =>
-                        handleStatusChange(index, e.target.value)
-                      }
                       className="px-3 py-2 text-xs font-semibold rounded-lg border border-gray-300 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer"
                     >
-                      <option value="Confirmed">Confirmed</option>
-                      <option value="Pending">Pending</option>
-                      <option value="Rejected">Rejected</option>
+                      <option value="confirmed">Confirmed</option>
+                      <option value="pending">Pending</option>
+                      <option value="cancelled">Cancelled</option>
                     </select>
                   )}
                 </td>

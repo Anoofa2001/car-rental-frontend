@@ -1,42 +1,79 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { assets, dummyCarData } from "../assets/assets";
+import { assets } from "../assets/assets";
 import Loader from "../components/Loader";
 import Footer from "../components/Footer";
+import { useAppContext } from "../context/AppContext";
+import { toast } from "react-hot-toast";
+import axios from "axios";
 
 const CarDetails = () => {
   const { id } = useParams();
+
+  const {
+    cars,
+    pickupDate,
+    setPickupDate,
+    returnDate,
+    setReturnDate,
+    currency,
+  } = useAppContext();
+
   const navigate = useNavigate();
   const [car, setCar] = useState(null);
-  const currency = import.meta.env.VITE_CURRENCY;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      const {data} = await axios.post("/api/bookings/create", {
+        car: car._id,
+        pickupDate,
+        returnDate,
+      });
+      if(data.success){
+        toast.success("Car booked successfully!");
+        navigate("/my-bookings");
+      }else {
+        toast.error("Failed to book the car. Please try again.");
+      }
+    } catch (error) {
+      toast.error("An error occurred while booking the car. Please try again.");
+    }
   }
 
   useEffect(() => {
-    setCar(dummyCarData.find((car) => car._id === id));
-  }, [id]);
+    if (cars && cars.length > 0) {
+      const foundCar = cars.find((c) => c._id === id);
+      setCar(foundCar || null);
+    }
+  }, [cars, id]);
 
-  return car ? (
+  if (!car) return <Loader />;
+
+  return (
     <>
       <div className="px-6 md:px-16 lg:px-24 xl:px-32 mt-16">
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center gap-2 mb-6 text-gray-500 cursor-pointer "
+          className="flex items-center gap-2 mb-6 text-gray-500 cursor-pointer"
         >
-          <img src={assets.arrow_icon} alt="" className="rotate-180 opacity-65" />
+          <img
+            src={assets.arrow_icon}
+            alt=""
+            className="rotate-180 opacity-65"
+          />
           Back to all cars
         </button>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
-          {/*left: Car Image and Details */}
+          {/* LEFT */}
           <div className="lg:col-span-2">
             <img
               src={car.image}
               alt=""
               className="w-full h-auto md:max-h-100 object-cover rounded-xl mb-6 shadow-md"
             />
+
             <div className="space-y-6">
               <div>
                 <h1 className="text-3xl font-bold">
@@ -46,6 +83,7 @@ const CarDetails = () => {
                   {car.category} {car.year}
                 </p>
               </div>
+
               <hr className="border-borderColor my-6" />
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -67,12 +105,14 @@ const CarDetails = () => {
                   </div>
                 ))}
               </div>
+
               {/* Description */}
               <div>
                 <h1 className="text-xl font-medium mb-3">Description</h1>
                 <p className="text-gray-500">{car.description}</p>
               </div>
-              {/*features */}
+
+              {/* Features */}
               <div>
                 <h1 className="text-xl font-medium mb-3">Features</h1>
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -83,7 +123,11 @@ const CarDetails = () => {
                     "Heated Seats",
                   ].map((item) => (
                     <li key={item} className="flex items-center text-gray-500">
-                      <img src={assets.check_icon} alt="" className="h-4 mr-2" />
+                      <img
+                        src={assets.check_icon}
+                        alt=""
+                        className="h-4 mr-2"
+                      />
                       {item}
                     </li>
                   ))}
@@ -92,8 +136,11 @@ const CarDetails = () => {
             </div>
           </div>
 
-          {/* Right: Booking form */}
-          <form onSubmit={handleSubmit} className="shadow-lg h-max sticky top-18 rounded-xl p-6 space-y-6 text-gray-500">
+          {/* RIGHT */}
+          <form
+            onSubmit={handleSubmit}
+            className="shadow-lg h-max sticky top-18 rounded-xl p-6 space-y-6 text-gray-500"
+          >
             <p className="flex items-center justify-between text-2xl text-gray-800 font-semibold">
               {currency}
               {car.pricePerDay}
@@ -103,33 +150,49 @@ const CarDetails = () => {
               </span>
             </p>
 
-            <hr className="border-borderColor my-6"/>
+            <hr className="border-borderColor my-6" />
 
             <div className="flex flex-col gap-2">
               <label htmlFor="pickup-date">Pickup Date</label>
               <input
                 type="date"
-                className="border border-borderColor px-3 py-2 rounded-lg" required id="pickup-date" min={new Date().toISOString().split('T')[0]}/>
+                value={pickupDate || ""}
+                onChange={(e) => setPickupDate(e.target.value)}
+                className="border border-borderColor px-3 py-2 rounded-lg"
+                required
+                id="pickup-date"
+                min={new Date().toISOString().split("T")[0]}
+              />
             </div>
 
             <div className="flex flex-col gap-2">
               <label htmlFor="return-date">Return Date</label>
-              <input
+              <input value={returnDate} onChange={(e) => setReturnDate(e.target.value)}
                 type="date"
-                className="border border-borderColor px-3 py-2 rounded-lg" required id="return-date"/>
+                value={returnDate || ""}
+                onChange={(e) => setReturnDate(e.target.value)}
+                className="border border-borderColor px-3 py-2 rounded-lg"
+                required
+                id="return-date"
+                min={pickupDate || new Date().toISOString().split("T")[0]}
+              />
             </div>
 
-            <button className="w-full bg-primary hover:bg-primary-dull transition-all py-3 font-medium text-white rounded-xl cursor-pointer">Book Now</button>
+            <button
+            
+             className="w-full bg-primary hover:bg-primary-dull transition-all py-3 font-medium text-white rounded-xl cursor-pointer">
+              Book Now
+            </button>
 
-            <p className="text-center text-sm">No credit card required to reserve</p>
-
+            <p className="text-center text-sm">
+              No credit card required to reserve
+            </p>
           </form>
         </div>
       </div>
+
       <Footer />
     </>
-  ) : (
-    <Loader />
   );
 };
 
