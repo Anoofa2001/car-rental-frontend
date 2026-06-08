@@ -52,7 +52,7 @@ const Newsletter = () => {
           whileInView={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.4 }}
           viewport={{ once: true }}
-          className="flex items-center justify-between max-w-2xl w-full md:h-13 h-12"
+          className="flex flex-col md:flex-row items-center justify-between max-w-2xl w-full md:h-14 h-12 gap-3"
         >
           <motion.input
             whileFocus={{ scale: 1.02 }}
@@ -68,7 +68,7 @@ const Newsletter = () => {
             type="submit"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="md:px-12 px-8 h-full text-white bg-primary hover:bg-primary-dull transition-all cursor-pointer rounded-md rounded-l-none"
+            className="md:px-12 px-8 h-full w-full md:w-auto text-white bg-primary hover:bg-primary-dull transition-all cursor-pointer rounded-md rounded-l-none"
           >
             Subscribe
           </motion.button>

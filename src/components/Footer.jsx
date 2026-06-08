@@ -10,7 +10,7 @@ const Footer = () => {
       viewport={{ once: true }}
       className="bg-gray-900 text-white py-8 mt-16"
     >
-      <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
+      <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-6">
 
         {/* Logo + Text */}
         <motion.div
@@ -32,7 +32,7 @@ const Footer = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
           viewport={{ once: true }}
-          className="flex space-x-6 mb-4 md:mb-0"
+          className="flex flex-wrap justify-center gap-4 mb-4 md:mb-0"
         >
           {["Home", "Cars", "My Bookings", "Contact"].map((item, i) => (
             <motion.a

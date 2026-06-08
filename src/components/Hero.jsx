@@ -54,7 +54,7 @@ const Hero = () => {
       {/* Heading */}
       <motion.h1
         variants={fadeUp}
-        className="text-4xl md:text-5xl font-semibold bg-gradient-to-r from-gray-800 to-gray-500 bg-clip-text text-transparent"
+        className="text-4xl md:text-5xl font-semibold bg-linear-to-r from-gray-800 to-gray-500 bg-clip-text text-transparent"
       >
         Rent Your Dream Car Today!
       </motion.h1>
@@ -63,7 +63,7 @@ const Hero = () => {
       <motion.form
         variants={fadeUp}
         onSubmit={handleSearch}
-        className="flex flex-col md:flex-row items-start md:items-center justify-between p-6 rounded-2xl md:rounded-full w-full max-w-80 md:max-w-200 bg-white/80 backdrop-blur-lg shadow-xl border border-gray-200"
+        className="flex flex-col md:flex-row items-start md:items-center justify-between p-6 rounded-2xl md:rounded-full w-full max-w-full md:max-w-208 bg-white/80 backdrop-blur-lg shadow-xl border border-gray-200"
       >
         <div className="flex flex-col md:flex-row items-start md:items-center gap-10 md:ml-8">
           {/* Location */}

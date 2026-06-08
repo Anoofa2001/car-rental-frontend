@@ -109,7 +109,7 @@ const Cars = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
-          className="flex items-center bg-white px-4 mt-6 max-w-140 w-full h-12 rounded-full shadow focus-within:shadow-lg transition-all"
+          className="flex items-center bg-white px-4 mt-6 max-w-full w-full h-12 rounded-full shadow focus-within:shadow-lg transition-all"
         >
           <img src={assets.search_icon} alt="" className="w-4.5 h-4.5 mr-2" />
 
