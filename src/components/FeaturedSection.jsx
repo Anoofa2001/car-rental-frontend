@@ -51,7 +51,7 @@ const FeaturedSection = () => {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-18"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-16"
       >
         {cars.slice(0, 6).map((car) => (
           <motion.div
@@ -84,7 +84,7 @@ const FeaturedSection = () => {
         whileTap={{ scale: 0.95 }}
         transition={{ duration: 0.4 }}
         viewport={{ once: true }}
-        className="flex items-center justify-center gap-2 px-6 py-2 border border-borderColor hover:bg-gray-50 rounded-md mt-18 cursor-pointer overflow-hidden relative"
+        className="flex items-center justify-center gap-2 px-6 py-2 border border-borderColor hover:bg-gray-50 rounded-md mt-12 cursor-pointer overflow-hidden relative"
       >
         {/* subtle shine effect */}
         <motion.span
